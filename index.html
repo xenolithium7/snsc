@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ninebot Max Plus</title>
+    <style>
+        :root {
+            --bg-color: #0d0a12;          /* Глубокий тёмный с фиолетовым отливом */
+            --card-bg: #16121e;            /* Карточки */
+            --accent-pink: #f4b8e4;         /* Основной розовый акцент */
+            --accent-pink-glow: rgba(244, 184, 228, 0.25);
+            --accent-cyan: #70a5fd;         /* Дополнительный холодный акцент */
+            --text-main: #f5e0dc;          /* Главный текст */
+            --text-muted: #9e8e99;         /* Вторичный текст */
+            --border-color: #2a2133;        /* Границы */
+            --border-hover: #f4b8e4;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(244, 184, 228, 0.08) 0%, transparent 70%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            color: var(--text-main);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 680px;
+            width: 100%;
+        }
+
+        /* --- Header --- */
+        .header {
+            text-align: center;
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            margin: 12px 0 4px 0;
+            font-size: 2.2rem;
+            color: var(--accent-pink);
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 16px var(--accent-pink-glow);
+        }
+
+        .header .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        /* --- Status Badge --- */
+        .status {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .status-ready {
+            background-color: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.15);
+        }
+
+        .status-service {
+            background-color: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.15);
+        }
+
+        .status-repair {
+            background-color: rgba(248, 113, 113, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            box-shadow: 0 0 10px rgba(248, 113, 113, 0.15);
+        }
+
+        /* --- Odometer Section --- */
+        .odometer-section {
+            text-align: center;
+            margin: 28px 0 36px 0;
+        }
+
+        .odometer-section .label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-pink);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .counter-wrapper {
+            display: inline-flex;
+            justify-content: center;
+        }
+
+        #anime-counter {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 14px;
+            border: 2px solid var(--accent-pink);
+            box-shadow: 0 0 25px var(--accent-pink-glow);
+        }
+
+        #anime-counter img {
+            height: 70px;
+            width: auto;
+            display: block;
+        }
+
+        /* --- Section Titles --- */
+        .section-title {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-cyan);
+            margin: 28px 0 14px 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-color), transparent);
+        }
+
+        /* --- Grid & Cards --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card .card-label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card .card-value {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.35;
+        }
+
+        .card .card-subtext {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <span id="status-badge" class="status"></span>
+        <h1>Ninebot Max Plus</h1>
+        <div class="subtitle">built by xenolithium7</div>
+    </div>
+
+    <!-- ODOMETER -->
+    <div class="odometer-section">
+        <div class="label">Total Odometer (km)</div>
+        <div class="counter-wrapper">
+            <div id="anime-counter">
+                <!-- Anime GIFs inserted by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- HARDWARE SECTION -->
+    <div class="section-title">⚡ Hardware</div>
+    <div class="grid">
+        <div class="card">
+            <div class="card-label">Motor</div>
+            <div class="card-value">S90L 7sc 400W</div>
+            <div class="card-subtext">1500W+ w/ Field Weakning</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Battery</div>
+            <div class="card-value">28700 mAh 36V</div>
+            <div class="card-subtext">NFCP3628B</div>
+        </div>
+        <div class="card">
+            <div class="card-label">ESC Controller</div>
+            <div class="card-value">2.3 STM32</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Lighting & Modding</div>
+            <div class="card-value">WLED ARGB</div>
+            <div class="card-subtext">ESP8266</div>
+        </div>
+    </div>
+
+    <!-- PERFORMANCE & SOFTWARE SECTION -->
+    <div class="section-title">🛠 Tuning & Performance</div>
+    <div class="grid">
+        <div class="card">
+            <div class="card-label">Top Speed</div>
+            <div class="card-value">>~60 km/h</div>
+            <div class="card-subtext">Field Weakening</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Firmware</div>
+            <div class="card-value">SHFW</div>
+            <div class="card-subtext">Xiaodash is available</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Sport Mode</div>
+            <div class="card-value">~35 km Range</div>
+            <div class="card-subtext">40A + Auto FW</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Eco Mode</div>
+            <div class="card-value">~75 km Range</div>
+            <div class="card-subtext">10A Current (~25 km/h)</div>
+        </div>
+    </div>
+<div class="footer">
+        thx for participating: morrics, gunban232, frekst
+    </div>
+</div>
+
+<script>
+    // --- SETTINGS ---
+    const currentMileage = 12450; // Total distance
+    const pathToDigits = 'digits/'; // Folder with anime GIFs
+
+    /* 
+       STATUS CODE:
+       1 = Green  ("● Ready")
+       2 = Yellow ("● Maintenance Required")
+       3 = Red    ("● Need repair")
+    */
+    const currentStatus = 1; 
+
+
+    // --- STATUS LOGIC ---
+    function updateStatus(statusCode) {
+        const badge = document.getElementById('status-badge');
+        badge.className = 'status'; 
+
+        if (statusCode === 1) {
+            badge.classList.add('status-ready');
+            badge.textContent = '● Ready';
+        } else if (statusCode === 2) {
+            badge.classList.add('status-service');
+            badge.textContent = '● Maintenance Required';
+        } else if (statusCode === 3) {
+            badge.classList.add('status-repair');
+            badge.textContent = '● Need repair';
+        }
+    }
+
+    // --- ODOMETER LOGIC ---
+    function renderAnimeCounter(mileage) {
+        const counterElement = document.getElementById('anime-counter');
+        const mileageStr = mileage.toString();
+        
+        counterElement.innerHTML = '';
+
+        for (let i = 0; i < mileageStr.length; i++) {
+            const digit = mileageStr[i];
+            const img = document.createElement('img');
+            img.src = `${pathToDigits}${digit}.gif`;
+            img.alt = digit;
+            counterElement.appendChild(img);
+        }
+    }
+
+    // Initialize
+    renderAnimeCounter(currentMileage);
+    updateStatus(currentStatus);
+</script>
+
+</body>
+</html>
