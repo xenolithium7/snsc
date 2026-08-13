@@ -120,9 +120,11 @@
             border-radius: 16px;
             border: 2px solid var(--accent-pink);
             box-shadow: 0 0 25px var(--accent-pink-glow);
+            flex-wrap: nowrap;
+            max-width: 100%;
+            overflow-x: auto;
         }
 
-        /* Увеличен размер гифок с 70px до 100px */
         #anime-counter img {
             height: 100px;
             width: auto;
@@ -277,20 +279,15 @@
 </div>
 
 <script>
-    // --- SETTINGS ---
-    const currentMileage = 5718; // Total distance
-    const pathToDigits = 'digits/'; // Folder with anime GIFs
+    // --- НАСТРОЙКИ ---
+    const INITIAL_MILEAGE = 1500; // Пробег первого контроллера (прибавляется автоматически)
+    const pathToDigits = 'digits/';
 
-    /* 
-       STATUS CODE:
-       1 = Green  ("● Ready")
-       2 = Yellow ("● Maintenance Required")
-       3 = Red    ("● Need repair")
-    */
-    const currentStatus = 1; 
+    // Вставь свои данные с JSONBin.io:
+    const BIN_ID = '6a7da34fda38895dfedf2840';
+    const API_KEY = '$2a$10$s57nd5TVyp3LhsZRLe/6Xu5FJhJA.y9ZBhIRZrQLs/nXS5mSr4J2C'; // Оставь пустым '', если Bin сделан Public
 
-
-    // --- STATUS LOGIC ---
+    // --- ОБНОВЛЕНИЕ СТАТУСА ---
     function updateStatus(statusCode) {
         const badge = document.getElementById('status-badge');
         badge.className = 'status'; 
@@ -307,10 +304,10 @@
         }
     }
 
-    // --- ODOMETER LOGIC ---
+    // --- РЕНДЕР ГИФОК ---
     function renderAnimeCounter(mileage) {
         const counterElement = document.getElementById('anime-counter');
-        const mileageStr = mileage.toString();
+        const mileageStr = Math.floor(mileage).toString();
         
         counterElement.innerHTML = '';
 
@@ -323,9 +320,46 @@
         }
     }
 
-    // Initialize
-    renderAnimeCounter(currentMileage);
-    updateStatus(currentStatus);
+    // --- ФЕТЧ ДАННЫХ ИЗ JSONBIN С КЭШИРОВАНИЕМ ---
+    async function loadData() {
+        try {
+            const headers = {};
+            if (API_KEY) {
+                headers['X-Master-Key'] = API_KEY;
+            }
+
+            const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers });
+            
+            if (!response.ok) throw new Error('Ошибка сети или неверный BIN_ID');
+            
+            const data = await response.json();
+            
+            const secondControllerMileage = Number(data.record.currentMileage) || 0;
+            const status = Number(data.record.status) || 1;
+
+            // 💾 Сохраняем самые последние данные в память браузера
+            localStorage.setItem('cached_second_mileage', secondControllerMileage);
+            localStorage.setItem('cached_status', status);
+
+            const totalMileage = INITIAL_MILEAGE + secondControllerMileage;
+
+            renderAnimeCounter(totalMileage);
+            updateStatus(status);
+        } catch (error) {
+            console.warn('Сбой сети, загружаем данные из кэша localStorage:', error);
+
+            // 📦 Достаём последнее сохранённое успешное значение из памяти
+            const savedSecondMileage = Number(localStorage.getItem('cached_second_mileage')) || 4216; // 4216 только для самого первого старта
+            const savedStatus = Number(localStorage.getItem('cached_status')) || 1;
+
+            const totalMileage = INITIAL_MILEAGE + savedSecondMileage;
+
+            renderAnimeCounter(totalMileage);
+            updateStatus(savedStatus);
+        }
+    }
+
+    loadData();
 </script>
 
 </body>
