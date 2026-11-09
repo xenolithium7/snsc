@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ninebot Max Plus</title>
+    <title>Garage Telemetry</title>
     <style>
         :root {
-            --bg-color: #0d0a12;          /* Глубокий тёмный с фиолетовым отливом */
-            --card-bg: #16121e;            /* Карточки */
-            --accent-pink: #f4b8e4;         /* Основной розовый акцент */
+            --bg-color: #0d0a12;
+            --card-bg: #16121e;
+            --accent-pink: #f4b8e4;
             --accent-pink-glow: rgba(244, 184, 228, 0.25);
-            --accent-cyan: #70a5fd;         /* Дополнительный холодный акцент */
-            --text-main: #f5e0dc;          /* Главный текст */
-            --text-muted: #9e8e99;         /* Вторичный текст */
-            --border-color: #2a2133;        /* Границы */
+            --accent-cyan: #70a5fd;
+            --text-main: #f5e0dc;
+            --text-muted: #9e8e99;
+            --border-color: #2a2133;
             --border-hover: #f4b8e4;
         }
 
@@ -27,7 +27,7 @@
             background-size: 100% 100%, 30px 30px, 30px 30px;
             color: var(--text-main);
             margin: 0;
-            padding: 30px 20px;
+            padding: 30px 16px;
             display: flex;
             justify-content: center;
         }
@@ -40,12 +40,12 @@
         /* --- Header --- */
         .header {
             text-align: center;
-            padding-bottom: 10px;
+            padding-bottom: 20px;
         }
 
         .header h1 {
-            margin: 12px 0 4px 0;
-            font-size: 2.2rem;
+            margin: 0 0 6px 0;
+            font-size: 2.3rem;
             color: var(--accent-pink);
             letter-spacing: 0.5px;
             text-shadow: 0 0 16px var(--accent-pink-glow);
@@ -56,18 +56,55 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 16px;
+        }
+
+        /* --- Fleet List --- */
+        .fleet-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 10px;
+        }
+
+        .scooter-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 22px 20px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+            transition: border-color 0.25s ease, transform 0.25s ease;
+        }
+
+        .scooter-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .scooter-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .scooter-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
         }
 
         /* --- Status Badge --- */
         .status {
             display: inline-block;
-            padding: 6px 18px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            padding: 5px 14px;
+            border-radius: 16px;
+            font-size: 0.8rem;
             font-weight: 600;
             letter-spacing: 0.5px;
-            transition: all 0.3s ease;
         }
 
         .status-ready {
@@ -91,114 +128,42 @@
             box-shadow: 0 0 10px rgba(248, 113, 113, 0.15);
         }
 
-        /* --- Odometer Section --- */
-        .odometer-section {
-            text-align: center;
-            margin: 28px 0 36px 0;
-        }
-
-        .odometer-section .label {
-            font-size: 0.85rem;
+        .odometer-label {
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--accent-pink);
-            margin-bottom: 6px;
+            margin-bottom: 10px;
             font-weight: 600;
         }
 
         .counter-wrapper {
             display: inline-flex;
             justify-content: center;
-            margin-top: 10px;
+            max-width: 100%;
         }
 
-        #anime-counter {
+        .anime-counter {
             display: flex;
             align-items: center;
             background-color: #ffffff;
-            padding: 10px 16px;
+            padding: 8px 14px;
             border-radius: 16px;
             border: 2px solid var(--accent-pink);
-            box-shadow: 0 0 25px var(--accent-pink-glow);
+            box-shadow: 0 0 20px var(--accent-pink-glow);
             flex-wrap: nowrap;
-            max-width: 100%;
             overflow-x: auto;
         }
 
-        #anime-counter img {
-            height: 100px;
+        .anime-counter img {
+            height: 80px;
             width: auto;
             display: block;
         }
 
-        /* --- Section Titles --- */
-        .section-title {
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--accent-cyan);
-            margin: 28px 0 14px 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-        }
-
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, var(--border-color), transparent);
-        }
-
-        /* --- Grid & Cards --- */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 14px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            padding: 16px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .card .card-label {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .card .card-value {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text-main);
-            line-height: 1.35;
-        }
-
-        .card .card-subtext {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* Footer */
         .footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 36px;
             color: var(--text-muted);
             font-size: 0.8rem;
             opacity: 0.7;
@@ -209,67 +174,45 @@
 
 <div class="container">
     <div class="header">
-        <span id="status-badge" class="status"></span>
-        <h1>Ninebot Max Plus</h1>
+        <h1>Garage Telemetry</h1>
         <div class="subtitle">built by xenolithium7</div>
     </div>
 
-    <!-- ODOMETER -->
-    <div class="odometer-section">
-        <div class="label">Odometer / Общий пробег</div>
-        <div class="counter-wrapper">
-            <div id="anime-counter">
-                <!-- Anime GIFs inserted by JS -->
+    <div class="fleet-list">
+        <!-- Самокат 1 -->
+        <div class="scooter-card" id="card-1">
+            <div class="scooter-top">
+                <span class="scooter-title" id="name-1">Ninebot SL90</span>
+                <span class="status" id="status-1"></span>
+            </div>
+            <div class="odometer-label">Odometer / Общий пробег</div>
+            <div class="counter-wrapper">
+                <div class="anime-counter" id="counter-1"></div>
             </div>
         </div>
-    </div>
 
-    <!-- HARDWARE SECTION -->
-    <div class="section-title">⚡ Hardware</div>
-    <div class="grid">
-        <div class="card">
-            <div class="card-label">Motor</div>
-            <div class="card-value">S90L 7sc 400W</div>
-            <div class="card-subtext">1500W+ w/ Field Weakening</div>
+        <!-- Самокат 2 -->
+        <div class="scooter-card" id="card-2">
+            <div class="scooter-top">
+                <span class="scooter-title" id="name-2">Ninebot Max Plus</span>
+                <span class="status" id="status-2"></span>
+            </div>
+            <div class="odometer-label">Odometer / Общий пробег</div>
+            <div class="counter-wrapper">
+                <div class="anime-counter" id="counter-2"></div>
+            </div>
         </div>
-        <div class="card">
-            <div class="card-label">Battery</div>
-            <div class="card-value">28700 mAh 36V</div>
-            <div class="card-subtext">NFCP3628B</div>
-        </div>
-        <div class="card">
-            <div class="card-label">ESC Controller</div>
-            <div class="card-value">2.3 STM32</div>
-        </div>
-        <div class="card">
-            <div class="card-label">Lighting & Modding</div>
-            <div class="card-value">WLED ARGB</div>
-            <div class="card-subtext">ESP8266</div>
-        </div>
-    </div>
 
-    <!-- PERFORMANCE & SOFTWARE SECTION -->
-    <div class="section-title">🛠 Tuning & Performance</div>
-    <div class="grid">
-        <div class="card">
-            <div class="card-label">Top Speed</div>
-            <div class="card-value">>~60 km/h</div>
-            <div class="card-subtext">Field Weakening</div>
-        </div>
-        <div class="card">
-            <div class="card-label">Firmware</div>
-            <div class="card-value">SHFW</div>
-            <div class="card-subtext">Xiaodash is available</div>
-        </div>
-        <div class="card">
-            <div class="card-label">Sport Mode</div>
-            <div class="card-value">~35 km Range</div>
-            <div class="card-subtext">40A + Auto FW</div>
-        </div>
-        <div class="card">
-            <div class="card-label">Eco Mode</div>
-            <div class="card-value">~75 km Range</div>
-            <div class="card-subtext">10A Current (~25 km/h)</div>
+        <!-- Самокат 3 -->
+        <div class="scooter-card" id="card-3">
+            <div class="scooter-top">
+                <span class="scooter-title" id="name-3">Ninebot Max Plus X</span>
+                <span class="status" id="status-3"></span>
+            </div>
+            <div class="odometer-label">Odometer / Общий пробег</div>
+            <div class="counter-wrapper">
+                <div class="anime-counter" id="counter-3"></div>
+            </div>
         </div>
     </div>
 
@@ -279,18 +222,20 @@
 </div>
 
 <script>
-    // --- НАСТРОЙКИ ---
-    const INITIAL_MILEAGE = 1500; // Пробег первого контроллера (прибавляется автоматически)
     const pathToDigits = 'digits/';
-
-    // Вставь свои данные с JSONBin.io:
     const BIN_ID = '6a7da34fda38895dfedf2840';
-    const API_KEY = '$2a$10$s57nd5TVyp3LhsZRLe/6Xu5FJhJA.y9ZBhIRZrQLs/nXS5mSr4J2C'; // Оставь пустым '', если Bin сделан Public
+    const API_KEY = '$2a$10$s57nd5TVyp3LhsZRLe/6Xu5FJhJA.y9ZBhIRZrQLs/nXS5mSr4J2C';
 
-    // --- ОБНОВЛЕНИЕ СТАТУСА ---
-    function updateStatus(statusCode) {
-        const badge = document.getElementById('status-badge');
-        badge.className = 'status'; 
+    const defaultFleet = {
+        "1": { name: "Ninebot SL90", baseMileage: 1500, currentMileage: 4216, status: 1 },
+        "2": { name: "Ninebot Max Plus", baseMileage: 0, currentMileage: 1200, status: 1 },
+        "3": { name: "Ninebot Max Plus X", baseMileage: 0, currentMileage: 350, status: 1 }
+    };
+
+    function updateStatus(id, statusCode) {
+        const badge = document.getElementById(`status-${id}`);
+        if (!badge) return;
+        badge.className = 'status';
 
         if (statusCode === 1) {
             badge.classList.add('status-ready');
@@ -304,11 +249,11 @@
         }
     }
 
-    // --- РЕНДЕР ГИФОК ---
-    function renderAnimeCounter(mileage) {
-        const counterElement = document.getElementById('anime-counter');
+    function renderAnimeCounter(id, mileage) {
+        const counterElement = document.getElementById(`counter-${id}`);
+        if (!counterElement) return;
+
         const mileageStr = Math.floor(mileage).toString();
-        
         counterElement.innerHTML = '';
 
         for (let i = 0; i < mileageStr.length; i++) {
@@ -320,42 +265,40 @@
         }
     }
 
-    // --- ФЕТЧ ДАННЫХ ИЗ JSONBIN С КЭШИРОВАНИЕМ ---
+    function renderAll(fleetData) {
+        ['1', '2', '3'].forEach(id => {
+            const item = fleetData[id] || defaultFleet[id];
+            
+            const nameEl = document.getElementById(`name-${id}`);
+            if (nameEl && item.name) nameEl.textContent = item.name;
+
+            const total = (Number(item.baseMileage) || 0) + (Number(item.currentMileage) || 0);
+            renderAnimeCounter(id, total);
+            updateStatus(id, Number(item.status) || 1);
+        });
+    }
+
     async function loadData() {
         try {
             const headers = {};
             if (API_KEY) {
                 headers['X-Master-Key'] = API_KEY;
+                headers['X-Access-Key'] = API_KEY;
             }
 
             const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers });
-            
-            if (!response.ok) throw new Error('Ошибка сети или неверный BIN_ID');
-            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
             const data = await response.json();
-            
-            const secondControllerMileage = Number(data.record.currentMileage) || 0;
-            const status = Number(data.record.status) || 1;
+            const fleet = data.record.scooters || defaultFleet;
 
-            // 💾 Сохраняем самые последние данные в память браузера
-            localStorage.setItem('cached_second_mileage', secondControllerMileage);
-            localStorage.setItem('cached_status', status);
-
-            const totalMileage = INITIAL_MILEAGE + secondControllerMileage;
-
-            renderAnimeCounter(totalMileage);
-            updateStatus(status);
+            localStorage.setItem('cached_fleet', JSON.stringify(fleet));
+            renderAll(fleet);
         } catch (error) {
-            console.warn('Сбой сети, загружаем данные из кэша localStorage:', error);
-
-            // 📦 Достаём последнее сохранённое успешное значение из памяти
-            const savedSecondMileage = Number(localStorage.getItem('cached_second_mileage')) || 4216; // 4216 только для самого первого старта
-            const savedStatus = Number(localStorage.getItem('cached_status')) || 1;
-
-            const totalMileage = INITIAL_MILEAGE + savedSecondMileage;
-
-            renderAnimeCounter(totalMileage);
-            updateStatus(savedStatus);
+            console.warn('Ошибка сети, берем из кэша localStorage:', error);
+            const cached = localStorage.getItem('cached_fleet');
+            const fleet = cached ? JSON.parse(cached) : defaultFleet;
+            renderAll(fleet);
         }
     }
 
