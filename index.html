@@ -13,6 +13,7 @@
             --accent-cyan: #70a5fd;
             --text-main: #f5e0dc;
             --text-muted: #9e8e99;
+            --text-sub: #6e626e;            /* Тускло-серый для альт-названий */
             --border-color: #2a2133;
             --border-hover: #f4b8e4;
         }
@@ -88,6 +89,15 @@
             margin-bottom: 14px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .title-wrapper {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            text-align: left;
         }
 
         .scooter-title {
@@ -97,7 +107,14 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- Status Badge --- */
+        .scooter-alt-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-sub);
+            letter-spacing: 0.3px;
+        }
+
+        /* --- Status Badges --- */
         .status {
             display: inline-block;
             padding: 5px 14px;
@@ -126,6 +143,22 @@
             color: #f87171;
             border: 1px solid rgba(248, 113, 113, 0.3);
             box-shadow: 0 0 10px rgba(248, 113, 113, 0.15);
+        }
+
+        /* ❄️ Зимовка (нежно-голубой) */
+        .status-winter {
+            background-color: rgba(147, 197, 253, 0.12);
+            color: #93c5fd;
+            border: 1px solid rgba(147, 197, 253, 0.35);
+            box-shadow: 0 0 10px rgba(147, 197, 253, 0.2);
+        }
+
+        /* 📦 Хранение (серый) */
+        .status-storage {
+            background-color: rgba(156, 163, 175, 0.12);
+            color: #9ca3af;
+            border: 1px solid rgba(156, 163, 175, 0.3);
+            box-shadow: 0 0 8px rgba(156, 163, 175, 0.1);
         }
 
         .odometer-label {
@@ -182,7 +215,10 @@
         <!-- Самокат 1 -->
         <div class="scooter-card" id="card-1">
             <div class="scooter-top">
-                <span class="scooter-title" id="name-1">Ninebot SL90</span>
+                <div class="title-wrapper">
+                    <span class="scooter-title" id="name-1">Ninebot SL90</span>
+                    <span class="scooter-alt-title" id="alt-name-1">SNSC 2.4</span>
+                </div>
                 <span class="status" id="status-1"></span>
             </div>
             <div class="odometer-label">Odometer / Общий пробег</div>
@@ -194,7 +230,10 @@
         <!-- Самокат 2 -->
         <div class="scooter-card" id="card-2">
             <div class="scooter-top">
-                <span class="scooter-title" id="name-2">Ninebot Max Plus</span>
+                <div class="title-wrapper">
+                    <span class="scooter-title" id="name-2">Ninebot Max Plus</span>
+                    <span class="scooter-alt-title" id="alt-name-2">SNSC 2.3</span>
+                </div>
                 <span class="status" id="status-2"></span>
             </div>
             <div class="odometer-label">Odometer / Общий пробег</div>
@@ -206,7 +245,10 @@
         <!-- Самокат 3 -->
         <div class="scooter-card" id="card-3">
             <div class="scooter-top">
-                <span class="scooter-title" id="name-3">Ninebot Max Plus X</span>
+                <div class="title-wrapper">
+                    <span class="scooter-title" id="name-3">Ninebot Max Plus X</span>
+                    <span class="scooter-alt-title" id="alt-name-3">SNSC 2.3.3</span>
+                </div>
                 <span class="status" id="status-3"></span>
             </div>
             <div class="odometer-label">Odometer / Общий пробег</div>
@@ -227,9 +269,9 @@
     const API_KEY = '$2a$10$s57nd5TVyp3LhsZRLe/6Xu5FJhJA.y9ZBhIRZrQLs/nXS5mSr4J2C';
 
     const defaultFleet = {
-        "1": { name: "Ninebot SL90", baseMileage: 1500, currentMileage: 4216, status: 1 },
-        "2": { name: "Ninebot Max Plus", baseMileage: 0, currentMileage: 1200, status: 1 },
-        "3": { name: "Ninebot Max Plus X", baseMileage: 0, currentMileage: 350, status: 1 }
+        "1": { name: "Ninebot SL90", altName: "SNSC 2.4", baseMileage: 1500, currentMileage: 4216, status: 1 },
+        "2": { name: "Ninebot Max Plus", altName: "SNSC 2.3", baseMileage: 0, currentMileage: 1200, status: 1 },
+        "3": { name: "Ninebot Max Plus X", altName: "SNSC 2.3.3", baseMileage: 0, currentMileage: 350, status: 1 }
     };
 
     function updateStatus(id, statusCode) {
@@ -237,15 +279,30 @@
         if (!badge) return;
         badge.className = 'status';
 
-        if (statusCode === 1) {
-            badge.classList.add('status-ready');
-            badge.textContent = '● Ready';
-        } else if (statusCode === 2) {
-            badge.classList.add('status-service');
-            badge.textContent = '● Maintenance Required';
-        } else if (statusCode === 3) {
-            badge.classList.add('status-repair');
-            badge.textContent = '● Need repair';
+        switch (statusCode) {
+            case 1:
+                badge.classList.add('status-ready');
+                badge.textContent = '● Ready';
+                break;
+            case 2:
+                badge.classList.add('status-service');
+                badge.textContent = '● Maintenance Required';
+                break;
+            case 3:
+                badge.classList.add('status-repair');
+                badge.textContent = '● Need repair';
+                break;
+            case 4:
+                badge.classList.add('status-winter');
+                badge.textContent = '❄️ Winter Storage';
+                break;
+            case 5:
+                badge.classList.add('status-storage');
+                badge.textContent = '📦 Storage';
+                break;
+            default:
+                badge.classList.add('status-ready');
+                badge.textContent = '● Ready';
         }
     }
 
@@ -272,6 +329,9 @@
             const nameEl = document.getElementById(`name-${id}`);
             if (nameEl && item.name) nameEl.textContent = item.name;
 
+            const altNameEl = document.getElementById(`alt-name-${id}`);
+            if (altNameEl && item.altName) altNameEl.textContent = item.altName;
+
             const total = (Number(item.baseMileage) || 0) + (Number(item.currentMileage) || 0);
             renderAnimeCounter(id, total);
             updateStatus(id, Number(item.status) || 1);
@@ -295,14 +355,19 @@
             localStorage.setItem('cached_fleet', JSON.stringify(fleet));
             renderAll(fleet);
         } catch (error) {
-            console.warn('Ошибка сети, берем из кэша localStorage:', error);
+            console.warn('Сбой сети, читаем из кэша localStorage:', error);
             const cached = localStorage.getItem('cached_fleet');
             const fleet = cached ? JSON.parse(cached) : defaultFleet;
             renderAll(fleet);
         }
     }
 
+    // Мгновенный первый рендер из кэша браузера
+    const initialCache = localStorage.getItem('cached_fleet');
+    renderAll(initialCache ? JSON.parse(initialCache) : defaultFleet);
+
     loadData();
+    setInterval(loadData, 30000);
 </script>
 
 </body>
